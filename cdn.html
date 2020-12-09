@@ -1,0 +1,70 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/js/foundation.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.3/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.4/vue.min.js"></script>
+<script src="//unpkg.com/vue/dist/vue.js"></script>
+<script src="//unpkg.com/element-ui@1.4.13/lib/index.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/element-ui@1.4/lib/theme-default/index.css">
+
+<div id="app">
+<template>
+  <el-table :data="list" border style="width: 100%">
+    <el-table-column label="Name" width="180">
+      <template scope="scope">
+        <span style="margin-left: 10px">{{ scope.row.name }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column label="Username" width="180">
+      <template scope="scope">
+        <el-popover trigger="hover" placement="top">
+          <p>Name: {{ scope.row.name }}</p>
+          <p>Username: {{ scope.row.username }}</p>
+          <p>Email: {{ scope.row.email }}</p>
+          <div slot="reference" class="name-wrapper">
+            <el-tag>{{ scope.row.username }}</el-tag>
+          </div>
+        </el-popover>
+      </template>
+    </el-table-column>
+    <el-table-column label="Email" width="180">
+      <template scope="scope">
+        <span style="margin-left: 10px">{{ scope.row.email }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column label="Operations">
+      <template scope="scope">
+        <el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+        <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+</template>
+</div>
+
+<script>
+ // Init Foundation - using reveal/modal JS
+$(document).foundation();
+
+// Vue Axios Call
+new Vue({
+	el: '#app',
+	data: {
+		list: null
+	},
+	methods: {
+		getUsers: function() {
+			var vm = this;
+			axios.get('https://jsonplaceholder.typicode.com/users').then(function(response) {
+				vm.list = response.data;
+			}, function(error) {
+				console.log(error.statusText);
+			});
+		}
+	},
+	mounted: function() {
+		this.getUsers();
+	}
+
+});
+
+</script>
